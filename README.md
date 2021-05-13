@@ -9,5 +9,6 @@ SudokuSolver.py - Functions for image processing of the Sudoku board, digit extr
 The CNN model was trained with images from the MNIST dataset and a custom dataset
 
 Helpful tutorials:
+
 https://www.pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/#pyis-cta-modal
 https://becominghuman.ai/image-processing-sudokuai-opencv-45380715a629
