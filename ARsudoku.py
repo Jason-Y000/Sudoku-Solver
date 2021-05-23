@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import time
 
-model_path = '/Users/jasonyuan/Desktop/Sudoku Project/sudoku_model_batch128_lr0.001_epochs20.pt'
+model_path = #Path to the pre-trained model weights 
 
 cap = cv2.VideoCapture(0)
 
