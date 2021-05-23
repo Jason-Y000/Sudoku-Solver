@@ -1,4 +1,5 @@
 import random
+import time
 
 class Sudoku:
     def __init__(self,mode,seed):
@@ -6,6 +7,7 @@ class Sudoku:
         self.seed = seed
         self.ans = []
         self.game = []
+        self.solved = []
 
     def generate_sol(self):
         board = [] # Make the board a list of lists
@@ -233,6 +235,253 @@ class Sudoku:
         self.game = [x[:] for x in board]
 
         return True
+
+    def row_check(self,board,row,col,num):
+        # nums = [True,True,True,True,True,True,True,True,True]
+        for j in range(0,9):
+            if (j == col) or (board[row][j] == 0):
+                continue
+            if board[row][j] == num:
+                return False
+        return True
+
+    def col_check(self,board,row,col,num):
+        # nums = [True,True,True,True,True,True,True,True,True]
+        for i in range(0,9):
+            if (i == row) or (board[i][col] == 0):
+                continue
+            if board[i][col] == num:
+                return False
+
+        return True
+
+    # def sub_grid_check(self,board,row,col,num):
+    #     if (row < 3):
+    #         for r in range(0,3):
+    #             if (col >= 0) and (col < 3):
+    #                 for c in range(0,3):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 3) and (col < 6):
+    #                 for c in range(3,6):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 6):
+    #                 for c in range(6,9):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #     elif (row >= 3) and (row < 6):
+    #         for r in range(3,6):
+    #             if (col >= 0) and (col < 3):
+    #                 for c in range(0,3):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 3) and (col < 6):
+    #                 for c in range(3,6):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 6):
+    #                 for c in range(6,9):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #     elif (row >= 6):
+    #         for r in range(6,9):
+    #             if (col >= 0) and (col < 3):
+    #                 for c in range(0,3):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 3) and (col < 6):
+    #                 for c in range(3,6):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #
+    #             elif (col >= 6):
+    #                 for c in range(6,9):
+    #                     if (r == row) or (c == col):
+    #                         continue
+    #                     if (board[r][c] == num):
+    #                         return False
+    #     return True
+    def sub_grid_check(self,board,row,col,num):
+        # nums = [True,True,True,True,True,True,True,True,True]
+        r = row // 3
+        c = col // 3
+
+        for i in range(r*3,(r+1)*3):
+            for j in range(c*3,(c+1)*3):
+                if (i == row) or (j == col) or (board[i][j] == 0):
+                    continue
+                if board[i][j] == num:
+                    return False
+        return True
+
+    def valid_nums(self,board,row,col):
+        valid = []
+        nums = [True,True,True,True,True,True,True,True,True]
+        # check1 = self.row_check(board,row,col)
+        # check2 = self.col_check(board,row,col)
+        # check3 = self.sub_grid_check(board,row,col)
+        for j in range(0,9):
+            if (board[row][j] == 0):
+                continue
+            nums[board[row][j]-1] = False
+
+        for i in range(0,9):
+            if (board[i][col] == 0):
+                continue
+            nums[board[i][col]-1] = False
+
+        r = row // 3
+        c = col // 3
+
+        for i in range(r*3,(r+1)*3):
+            for j in range(c*3,(c+1)*3):
+                if (board[i][j] == 0):
+                    continue
+                nums[board[i][j]-1] = False
+
+        for n,t in enumerate(nums,1):
+            if (t):
+                valid.append(n)
+
+        return valid
+
+    def precheck1(self,board): #Check to make sure enough conds given
+        given = 0
+        for r in range(0,9):
+            for c in range(0,9):
+                if board[r][c] != 0:
+                    given += 1
+
+                if given > 17:
+                    return True
+        return False
+
+    def precheck2(self,board): #Given conds are valid
+        nums = [0,0,0,0,0,0,0,0,0]
+        for r in range(0,9):
+            for c in range(0,9):
+                if board[r][c] != 0:
+                    nums[board[r][c]-1] += 1
+                    if not self.row_check(board,r,c,board[r][c]):
+                        return False
+                    if not self.col_check(board,r,c,board[r][c]):
+                        return False
+                    if not self.sub_grid_check(board,r,c,board[r][c]):
+                        return False
+        if 10 in nums:
+            return False
+        return True
+
+    def opt_solve(self,board):
+        if not self.precheck1(board):
+            return False
+        if not self.precheck2(board):
+            return False
+
+        while (self.pass_one(board) or self.elimination(board)):
+            # self.display(board)
+            # print("\n")
+            continue
+        return self.opt_solve_helper(board)
+
+    def pass_one(self,board):
+        changed = False
+        for r in range(0,9):
+            for c in range(0,9):
+                if (board[r][c] == 0):
+                    valid = self.valid_nums(board,r,c)
+                    if len(valid) == 1:
+                        board[r][c] = valid[0]
+                        changed = True
+
+        return changed
+
+    def elimination(self,board):
+        changed = False
+
+        for r in range(0,9):
+            nums = [[],[],[],[],[],[],[],[],[]]
+            for col in range(0,9):
+                if board[r][col] == 0:
+                    valid = self.valid_nums(board,r,col)
+                    for el in valid:
+                        nums[el-1] = nums[el-1] + [(r,col)]
+            for n in range(0,9):
+                if len(nums[n]) == 1:
+                    board[nums[n][0][0]][nums[n][0][1]] = n+1
+                    changed = True
+
+        for j in range(0,9):
+            nums = [[],[],[],[],[],[],[],[],[]]
+            for i in range(0,9):
+                if board[i][j] == 0:
+                    valid = self.valid_nums(board,i,j)
+                    for el in valid:
+                        nums[el-1] = nums[el-1] + [(i,j)]
+            for n in range(0,9):
+                if len(nums[n]) == 1:
+                    board[nums[n][0][0]][nums[n][0][1]] = n+1
+                    changed = True
+
+        return changed
+
+    def opt_solve_helper(self,board):
+      # min = 10
+      found = False
+      for r in range(0,9):
+          for c in range(0,9):
+              if (board[r][c] == 0):
+                  found = True
+                  valid = self.valid_nums(board,r,c)
+                  if len(valid) == 0:
+                      return False
+                  # elif len(temp) < min:
+                      # valid = self.valid_nums(board,r,c)
+                  row = r
+                  col = c
+                  if (found):
+                      break
+              if (found):
+                  break
+
+      if (found == False):
+          return True
+
+      ###### Fill in with the valid number ######
+      # valid = self.valid_nums(board,row,col)
+      for n in valid:
+          board[row][col] = n
+
+          if (self.opt_solve_helper(board) == True):
+              return True
+
+          board[row][col] = 0
+
+      return False
 
     def solve(self,board):
         # Find empty board location and return True if there are none
