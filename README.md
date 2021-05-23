@@ -13,7 +13,7 @@ ARsudoku.py - Program to use a camera to solve the sudoku puzzle in real-time.
 
 model.py - Contains the class definition of the CNN model.
 
-sudoku_model_batch128_lr0.001_epochs20.pt - File containing the pre-trained weights of the CNN model. Model weights were trained on GPU, so if you computer doesn't have GPU support be sure to load the model weights to CPU.
+sudoku_model_batch128_lr0.001_epochs20.pt - File containing the pre-trained weights of the CNN model. Model weights were trained on GPU, so if your computer doesn't have GPU support be sure to load the model weights to CPU.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
