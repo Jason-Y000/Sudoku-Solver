@@ -7,7 +7,7 @@ sudoku.py - Contains the class for Sudoku. Has two functions for solving a sudok
 
 SudokuSolverStill.py - Functions for image processing of the Sudoku board, digit extraction, solving board and then projecting back to the original image. These functions are intended for still images of an unsolved sudoku board.
 
-SudokuSolverAR.py - Fucntions for processing a sudoku board in real-time. Essentially the same as SudokuSolverStill.py with some minor changes.
+SudokuSolverAR.py - Functions for processing a sudoku board in real-time. Essentially the same as SudokuSolverStill.py with some minor changes.
 
 ARsudoku.py - Program to use a camera to solve the sudoku puzzle in real-time.
 
